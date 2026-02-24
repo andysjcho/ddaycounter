@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>D-Day Counter</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 100px;
+      background: #f4f4f4;
+    }
+    h1 { font-size: 40px; }
+    .box {
+      font-size: 24px;
+      margin: 20px;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      display: inline-block;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+
+<h1>📅 D-Day Counter</h1>
+
+<div class="box">
+  현재시각 기준: <br>
+  <span id="realtime"></span>
+</div>
+
+<div class="box">
+  워킹데이 기준: <br>
+  <span id="workingday"></span>
+</div>
+
+<script>
+  // 🔥 여기에 목표 날짜 입력
+  const targetDate = new Date("2026-12-31T00:00:00");
+
+  function updateCounter() {
+    const now = new Date();
+    const diff = targetDate - now;
+
+    if (diff <= 0) {
+      document.getElementById("realtime").innerText = "D-Day!";
+      document.getElementById("workingday").innerText = "D-Day!";
+      return;
+    }
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+
+    document.getElementById("realtime").innerText =
+      `${days}일 ${hours}시간 ${minutes}분 남음`;
+
+    // 워킹데이 계산
+    let workingDays = 0;
+    let tempDate = new Date(now);
+
+    while (tempDate < targetDate) {
+      tempDate.setDate(tempDate.getDate() + 1);
+      const day = tempDate.getDay();
+      if (day !== 0 && day !== 6) { // 일요일(0), 토요일(6) 제외
+        workingDays++;
+      }
+    }
+
+    document.getElementById("workingday").innerText =
+      `${workingDays}일 남음`;
+  }
+
+  updateCounter();
+  setInterval(updateCounter, 60000);
+</script>
+
+</body>
+</html>
